@@ -44,6 +44,10 @@ class DownloadFileHandler(FileSystemEventHandler):
         result = src_path.split(self.file_path)[1]
         print(f"file name: {result}")
         return result
+    
+    #TODO: extract keyword from a list of similar file names
+    def get_keyword(self, similar_files):
+        return
 
 
 
