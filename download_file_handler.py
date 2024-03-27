@@ -15,13 +15,14 @@ class DownloadFileHandler(FileSystemEventHandler):
             print("ignored")
             return
         print(f"new file -  {src_path} created!")
-        
+
 
     
     def get_files(self):
         entries = os.scandir(self.file_path)
         for entry in entries:
             print(entry)
+            print("hi")
 
 
         
