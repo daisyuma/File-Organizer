@@ -12,7 +12,7 @@ file_path = '/Users/daisyma/Downloads'
 if __name__ == "__main__":
     print("program started")
     path = file_path
-    event_handler = DownloadFileHandler(file_path=path, threshold=0)
+    event_handler = DownloadFileHandler(file_path=path, threshold=85)
     observer = Observer()
     observer.schedule(event_handler, path, recursive=True)
     observer.start()
