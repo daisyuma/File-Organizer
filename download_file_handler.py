@@ -1,5 +1,7 @@
 import os
 import re
+
+from numpy import loadtxt
 from watchdog.events import FileSystemEventHandler
 from thefuzz import fuzz
 
@@ -14,18 +16,44 @@ class DownloadFileHandler(FileSystemEventHandler):
     def on_modified(self, event):
         src_path = event.src_path
         if (any(name in src_path for name in temp_file_names) or self.file_path == src_path):
+            # ignore temporary files
             print("ignored")
             return
         print(f"new file -  {src_path} created!")
 
+    # read all newly created folders from new_folders.txt and store it in an array. return this array
+    def read_folders(self):
+        folders = loadtxt("new_folders.txt", delimiter=",", dtype=str)
+        return folders
 
+
+    # checks if a sub folder is already created for this file
+    # loops through all newly created folder in new_folders.txt and check its content for similarity
+    # similarity between a file and a folder is determined by:
+    # average fuzz similarity score between new file and each existing file in the directory 
+    # if avg score > threshold -> belongs to that folder 
+    # if there is no such folder return an empty string
+    # TODO: unit test
+    def is_folder_created(self, new_file):
+        new_folders = self.read_folders()
+        for folder in new_folders:
+            similarity_score = 0
+            entries = os.scandir(self.file_path + '/' + folder)
+            for entry in entries:
+                similarity_score += fuzz.ratio(entry.name, new_file)
+            if (similarity_score / len(entries) > self.threshold):
+                return folder    
+        return ""
+
+
+    
     # get all the files in the directory and check for similary with new_file
     # return all the similar file entries
     def get_similar_files(self, new_file):
         entries = os.scandir(self.file_path)
         similar_files = []
         for entry in entries:
-            if (self.check_file(new_file, entry.name)):
+            if (self.check_similarity(new_file, entry.name)):
                 similar_files.append(entry)
         print(f"similar_files: {similar_files}")
         return similar_files
@@ -33,7 +61,7 @@ class DownloadFileHandler(FileSystemEventHandler):
     
     # use fuzzy string matching to compare two file paths
     # if similarity is > threshold, return true
-    def check_file(self, file_1, file_2):
+    def check_similarity(self, file_1, file_2):
         similarity = fuzz.ratio(file_1, file_2)
         print(f"Similarity score {file_1} | {file_2}: {similarity}")
         return similarity >= self.threshold
