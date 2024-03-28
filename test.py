@@ -10,10 +10,15 @@ class TestFileHandler(unittest.TestCase):
     #     print(result)
     
     # def test_get_similar_files(self):
-    #     result = self.file_handler.get_similar_files("/Users/daisyma/Downloads/fileAutomator (6).py")
+    #     result = self.file_handler.get_similar_files("fileAutomator (6).py")
 
-    def test_get_filename(self):
-        result = self.file_handler.get_filename("/Users/daisyma/Downloads/fileAutomator (6).py")
+    # def test_get_filename(self):
+    #     result = self.file_handler.get_filename("/Users/daisyma/Downloads/fileAutomator (6).py")
+    
+    def test_get_keyword(self):
+        filenames = self.file_handler.get_similar_files("fileAutomator (6).py")
+        keyword = self.file_handler.get_keyword(filenames)
+        self.assertEqual("fileAutomator", keyword)
 
 if __name__ == '__main__':
     unittest.main()
