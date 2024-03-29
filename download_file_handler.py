@@ -4,6 +4,7 @@ import re
 from numpy import loadtxt
 from watchdog.events import FileSystemEventHandler
 from thefuzz import fuzz
+from pathlib import Path
 
 temp_file_names = [".crdownload", ".com.google.Chrome"]
 
@@ -20,6 +21,20 @@ class DownloadFileHandler(FileSystemEventHandler):
             print("ignored")
             return
         print(f"new file -  {src_path} created!")
+        file_name = self.get_filename(src_path)
+        if (self.is_folder_created == ""): #folder has not been created
+            similar_files = self.get_similar_files(file_name)
+            keyword = self.get_keyword(similar_files)
+            self.create_folder(keyword)
+            return
+            
+    # create a folder in the directory with folder_name
+    def create_folder(self, folder_name):
+        # ensure first letter is upper case
+        folder_name = folder_name.capitalize()
+        Path(self.file_path + folder_name).mkdir(parents=True, exist_ok=True)
+        return
+
 
     # read all newly created folders from new_folders.txt and store it in an array. return this array
     def read_folders(self):
@@ -40,7 +55,7 @@ class DownloadFileHandler(FileSystemEventHandler):
         for folder in new_folders:
             similarity_score = 0
             folder_size = 0
-            entries = os.scandir(self.file_path + '/' + folder)
+            entries = os.scandir(self.file_path + folder)
             for entry in entries:
                 similarity_score += fuzz.ratio(entry.name, new_file)
                 folder_size += 1

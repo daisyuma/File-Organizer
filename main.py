@@ -5,7 +5,7 @@ from time import sleep
 from watchdog.observers import Observer
 
 
-file_path = '/Users/daisyma/Downloads'
+file_path = '/Users/daisyma/Downloads/'
         
 
 

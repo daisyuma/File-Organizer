@@ -1,10 +1,11 @@
 import unittest
 import shutil
+import os
 from download_file_handler import DownloadFileHandler
 from pathlib import Path
 
 class TestFileHandler(unittest.TestCase):
-    file_handler = DownloadFileHandler(file_path='/Users/daisyma/Downloads', threshold=80)
+    file_handler = DownloadFileHandler(file_path='/Users/daisyma/Downloads/', threshold=80)
 
     # def test_check_similarity(self):
     #     result = self.file_handler.check_similarity("phil fileAutomator (3)", " math fileAutomator (4)")
@@ -17,8 +18,8 @@ class TestFileHandler(unittest.TestCase):
     # def test_get_filename(self):
     #     result = self.file_handler.get_filename("/Users/daisyma/Downloads/fileAutomator (6).py")
 
-    # def test_read_folders(self):
-    #     result = self.file_handler.read_folders()
+    def test_read_folders(self):
+        result = self.file_handler.read_folders()
     
     # def test_get_keyword(self):
     #     filenames = self.file_handler.get_similar_files("fileAutomator (6).py")
@@ -43,6 +44,18 @@ class TestFileHandler(unittest.TestCase):
 
         #Cleanup
         shutil.rmtree("/Users/daisyma/Downloads/" + test_folder_name)
+    
+
+    def test_create_folder(self):
+        #Arrange.
+        folder_name = "test_create_folder"
+        #Act.
+        self.file_handler.create_folder(folder_name)
+        #Assert.
+        self.assertTrue(os.path.isdir("/Users/daisyma/Downloads/Test_create_folder"))
+        #Cleanup
+        shutil.rmtree("/Users/daisyma/Downloads/Test_create_folder")
+
                 
 
 if __name__ == '__main__':
