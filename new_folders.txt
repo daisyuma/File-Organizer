@@ -1,1 +1,1 @@
-fileAutomator,A,B,C
+Test_folderA,

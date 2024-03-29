@@ -33,15 +33,18 @@ class DownloadFileHandler(FileSystemEventHandler):
     # average fuzz similarity score between new file and each existing file in the directory 
     # if avg score > threshold -> belongs to that folder 
     # if there is no such folder return an empty string
-    # TODO: unit test
+    #TODO return the HIGHEST folder similarity score
     def is_folder_created(self, new_file):
         new_folders = self.read_folders()
+        print(f"new_folders: {new_folders}")
         for folder in new_folders:
             similarity_score = 0
+            folder_size = 0
             entries = os.scandir(self.file_path + '/' + folder)
             for entry in entries:
                 similarity_score += fuzz.ratio(entry.name, new_file)
-            if (similarity_score / len(entries) > self.threshold):
+                folder_size += 1
+            if (similarity_score / folder_size > self.threshold):
                 return folder    
         return ""
 
