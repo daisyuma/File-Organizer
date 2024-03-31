@@ -55,6 +55,26 @@ class TestFileHandler(unittest.TestCase):
         self.assertTrue(os.path.isdir("/Users/daisyma/Downloads/Test_create_folder"))
         #Cleanup
         shutil.rmtree("/Users/daisyma/Downloads/Test_create_folder")
+    
+    def test_move_files(self):
+        #Arrange.
+        test_folder_path = "/Users/daisyma/Downloads/Test_folderA/"
+        #create test folder
+        Path(test_folder_path).mkdir(parents=True, exist_ok=True) 
+        #create some test files in Downloads
+        file_entries = []
+        for i in range(1,5):
+            file_path = test_folder_path + str(i) + ".txt"
+            with open(file_path, 'w') as fp:
+                fp.write('test test test')
+            entries = os.scandir(file_path)
+            for entry in entries:
+                file_entries.append(entry)
+        #TODO
+        #Act.
+        self.file_handler.move_files(file_entries, test_folder_path)
+        #Assert.
+        #Cleanup.
 
                 
 

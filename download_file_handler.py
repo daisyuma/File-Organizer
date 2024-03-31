@@ -5,6 +5,7 @@ from numpy import loadtxt
 from watchdog.events import FileSystemEventHandler
 from thefuzz import fuzz
 from pathlib import Path
+from shutil import move
 
 temp_file_names = [".crdownload", ".com.google.Chrome"]
 
@@ -26,14 +27,24 @@ class DownloadFileHandler(FileSystemEventHandler):
             similar_files = self.get_similar_files(file_name)
             keyword = self.get_keyword(similar_files)
             self.create_folder(keyword)
-            return
+                # TODO: move all similar file entries to this folder
+                # move newly downloaded file to this folder
             
+            return
+    
+    # move all file entries to dest if dest exists   
+    # if does not exist, throw an error          
+    def move_files(self, entries, dest):
+        if os.exists(dest):
+            for entry in entries:
+                move(entry, dest)
+    
     # create a folder in the directory with folder_name
     def create_folder(self, folder_name):
         # ensure first letter is upper case
         folder_name = folder_name.capitalize()
         Path(self.file_path + folder_name).mkdir(parents=True, exist_ok=True)
-        return
+        return 
 
 
     # read all newly created folders from new_folders.txt and store it in an array. return this array
