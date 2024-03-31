@@ -70,7 +70,6 @@ class TestFileHandler(unittest.TestCase):
             entries = os.scandir(file_path)
             for entry in entries:
                 file_entries.append(entry)
-        #TODO
         #Act.
         self.file_handler.move_files(file_entries, test_folder_path)
         #Assert.
