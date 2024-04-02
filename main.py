@@ -14,12 +14,11 @@ if __name__ == "__main__":
     path = file_path
     event_handler = DownloadFileHandler(file_path=path, threshold=85)
     observer = Observer()
-    observer.schedule(event_handler, path, recursive=True)
+    observer.schedule(event_handler, path)
     observer.start()
     try:
         while True:
-            print("line 10")
-            sleep(15)
+            sleep(20)
     except KeyboardInterrupt:
         observer.stop()
     observer.join()

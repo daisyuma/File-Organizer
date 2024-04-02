@@ -7,7 +7,8 @@ from thefuzz import fuzz
 from pathlib import Path
 from shutil import move
 
-temp_file_names = [".crdownload", ".com.google.Chrome"]
+temp_file_names = [".crdownload", ".com.google.Chrome", ".DS_Store"]
+newly_created_folders = "new_folders.txt"
 
  # inherits all functions in FileSystemEventHandler
 class DownloadFileHandler(FileSystemEventHandler):  
@@ -17,23 +18,36 @@ class DownloadFileHandler(FileSystemEventHandler):
         
     def on_modified(self, event):
         src_path = event.src_path
-        if (any(name in src_path for name in temp_file_names) or self.file_path == src_path):
+        if (any(name in src_path for name in temp_file_names) or src_path in self.file_path):
             # ignore temporary files
             print("ignored")
             return
         print(f"new file -  {src_path} created!")
         file_name = self.get_filename(src_path)
-        if (self.is_folder_created == ""): #folder has not been created
+        print(f"file name: {file_name}")
+        print(f"self.is_folder_created: {self.is_folder_created(file_name)}")
+        if (self.is_folder_created(file_name) == ""): #folder has not been created
+            print("line 29")
             similar_files = self.get_similar_files(file_name)
+            print(f"similar files: {similar_files}")
             keyword = self.get_keyword(similar_files)
             self.create_folder(keyword)
+            print("line 34")
             dest_folder = self.file_path + keyword
             self.move_files(similar_files, dest_folder)
-            self.move_files([src_path], dest_folder)
+            
+            #write new folder name to new_folders.txt
+            self.write_folder(keyword)
         
         #TODO: test this 
             
         return
+    
+    # append newly created folder name to the end of new_folders.txt
+    # use ',' as delimiter
+    def write_folder(self, folder_name):
+        with open(newly_created_folders, "a") as fp:
+            fp.write(folder_name + ',')
     
     # move all file entries to dest if dest exists   
     # if does not exist, throw an error          
@@ -52,7 +66,7 @@ class DownloadFileHandler(FileSystemEventHandler):
 
     # read all newly created folders from new_folders.txt and store it in an array. return this array
     def read_folders(self):
-        folders = loadtxt("new_folders.txt", delimiter=",", dtype=str)
+        folders = loadtxt(newly_created_folders, delimiter=",", dtype=str)
         return folders
 
 
@@ -95,7 +109,6 @@ class DownloadFileHandler(FileSystemEventHandler):
     # if similarity is > threshold, return true
     def check_similarity(self, file_1, file_2):
         similarity = fuzz.ratio(file_1, file_2)
-        print(f"Similarity score {file_1} | {file_2}: {similarity}")
         return similarity >= self.threshold
     
     # extract file name from the full path in src_path

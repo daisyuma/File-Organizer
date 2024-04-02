@@ -69,12 +69,8 @@ class TestFileHandler(unittest.TestCase):
             with open(file_path, 'w') as fp:
                 fp.write('test test test')
             file_entries.append(file_path)
-        print("line 72")
-        input("")
         #Act.
         self.file_handler.move_files(file_entries, test_folder_path)
-        print("76")
-        input("")
         #Assert.
         self.assertTrue(os.path.isfile("/Users/daisyma/Downloads/Test_folderA/" + test_file_name + "4.txt"))
         #Cleanup.
