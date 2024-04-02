@@ -59,21 +59,26 @@ class TestFileHandler(unittest.TestCase):
     def test_move_files(self):
         #Arrange.
         test_folder_path = "/Users/daisyma/Downloads/Test_folderA/"
+        test_file_name = "test_move_file"
         #create test folder
         Path(test_folder_path).mkdir(parents=True, exist_ok=True) 
         #create some test files in Downloads
         file_entries = []
         for i in range(1,5):
-            file_path = test_folder_path + str(i) + ".txt"
+            file_path = self.file_handler.file_path + test_file_name + str(i) + ".txt"
             with open(file_path, 'w') as fp:
                 fp.write('test test test')
-            entries = os.scandir(file_path)
-            for entry in entries:
-                file_entries.append(entry)
+            file_entries.append(file_path)
+        print("line 72")
+        input("")
         #Act.
         self.file_handler.move_files(file_entries, test_folder_path)
+        print("76")
+        input("")
         #Assert.
+        self.assertTrue(os.path.isfile("/Users/daisyma/Downloads/Test_folderA/" + test_file_name + "4.txt"))
         #Cleanup.
+        shutil.rmtree(test_folder_path)
 
                 
 

@@ -27,15 +27,18 @@ class DownloadFileHandler(FileSystemEventHandler):
             similar_files = self.get_similar_files(file_name)
             keyword = self.get_keyword(similar_files)
             self.create_folder(keyword)
-                # TODO: move all similar file entries to this folder
-                # move newly downloaded file to this folder
+            dest_folder = self.file_path + keyword
+            self.move_files(similar_files, dest_folder)
+            self.move_files([src_path], dest_folder)
+        
+        #TODO: test this 
             
-            return
+        return
     
     # move all file entries to dest if dest exists   
     # if does not exist, throw an error          
     def move_files(self, entries, dest):
-        if os.exists(dest):
+        if os.path.exists(dest):
             for entry in entries:
                 move(entry, dest)
     
