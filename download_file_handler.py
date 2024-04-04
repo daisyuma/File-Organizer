@@ -1,5 +1,7 @@
-import os
+import os, errno
 import re
+import shutil
+import filecmp
 
 from numpy import loadtxt
 from watchdog.events import FileSystemEventHandler
@@ -12,36 +14,56 @@ newly_created_folders = "new_folders.txt"
 
  # inherits all functions in FileSystemEventHandler
 class DownloadFileHandler(FileSystemEventHandler):  
+    file_cache = []
     def __init__(self, file_path, threshold):
         self.file_path = file_path
         self.threshold = threshold
         
     def on_modified(self, event):
         src_path = event.src_path
-        if (any(name in src_path for name in temp_file_names) or src_path in self.file_path):
+        if (any(name in src_path for name in temp_file_names) or src_path in self.file_path or src_path in self.file_cache):
             # ignore temporary files
             print("ignored")
             return
         print(f"new file -  {src_path} created!")
         file_name = self.get_filename(src_path)
+        similar_files = self.get_similar_files(file_name)
+        print(f"similar files: {similar_files}")
+        keyword = self.get_keyword(similar_files)
+        dest_folder = self.file_path + keyword
         print(f"file name: {file_name}")
-        print(f"self.is_folder_created: {self.is_folder_created(file_name)}")
-        if (self.is_folder_created(file_name) == ""): #folder has not been created
-            print("line 29")
-            similar_files = self.get_similar_files(file_name)
-            print(f"similar files: {similar_files}")
-            keyword = self.get_keyword(similar_files)
-            self.create_folder(keyword)
-            print("line 34")
-            dest_folder = self.file_path + keyword
-            self.move_files(similar_files, dest_folder)
-            
-            #write new folder name to new_folders.txt
-            self.write_folder(keyword)
-        
-        #TODO: test this 
-            
+        is_folder_created = self.is_folder_created(file_name)
+        try:
+            if (is_folder_created == ""): #folder has not been created
+                self.create_folder(keyword)
+                self.move_files(similar_files, dest_folder)
+                #write new folder name to new_folders.txt
+                self.write_folder(keyword)
+            else: #folder is already created, move file to this folder
+                self.move_files([src_path], dest_folder)
+        except shutil.Error as e:
+            duplicate_file = self.extract_duplicate_file(e.args[0], dest_folder)
+            print(f"duplicate filename: {duplicate_file}")
+            if (filecmp.cmp(self.file_path + duplicate_file, dest_folder + "/" + duplicate_file)):
+                inp = input(f"duplicate files {duplicate_file} found in Downloads and {dest_folder}, delete the one in Downloads? [y]/[n]")
+                while (inp not in ["y", "n"]):
+                    print("please input one of [y] or [n]")
+                if (inp == 'y'):
+                    self.remove_file(self.file_path + duplicate_file)
+        self.file_cache.append(src_path)
         return
+    
+    def extract_duplicate_file(self, err_msg, dest_folder):
+        duplicate_filename = re.sub(rf"^Destination path '{dest_folder}/|' already exists$", "", err_msg)
+        # duplicate_filename = re.match()
+        return duplicate_filename
+
+    def remove_file(self, file_name):
+        try:
+            os.remove(file_name)
+        except OSError as e: 
+            if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
+                raise # re-raise exception if a different error occurred
     
     # append newly created folder name to the end of new_folders.txt
     # use ',' as delimiter

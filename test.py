@@ -75,6 +75,11 @@ class TestFileHandler(unittest.TestCase):
         self.assertTrue(os.path.isfile("/Users/daisyma/Downloads/Test_folderA/" + test_file_name + "4.txt"))
         #Cleanup.
         shutil.rmtree(test_folder_path)
+    
+    def test_extract_duplicate_file(self):
+        err_msg = "Destination path '/Users/daisyma/Downloads/fileAutomator/fileAutomator (1).py' already exists"
+        result = self.file_handler.extract_duplicate_file(err_msg, "/Users/daisyma/Downloads/fileAutomator")
+        self.assertEqual("fileAutomator (1).py", result)
 
                 
 
