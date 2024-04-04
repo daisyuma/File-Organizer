@@ -1,1 +1,1 @@
-fileAutomator,
+fileAutomator,download_file_handler,new_folders,
