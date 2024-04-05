@@ -2,7 +2,11 @@
 ## Table of contents
 
 * [About This Project](#about-this-project)
+    * [Built With](#built-with)
 * [Running Script Locally](#running-script-locally)
+* [Usage](#usage) 
+* [Roadmap](#roadmap)
+* [Ackowledgements](#acknowledgments)
 
 
 ## About This Project
@@ -21,19 +25,32 @@ To tackle this inconvenience and automate the process, I developed a python scri
 2) install any missing libraries like watchdog, shutil, thefuzz ...etc
 `$ pip install watchdog shutil thefuzz`
 4) modify the directory you want to organize
-5) adjust the similarity `threshold` here to specify the level of similarity required for file names to be grouped into the same folder. Notice here we are using [fuzzy string matching](https://www.datacamp.com/tutorial/fuzzy-string-python) ...For example, if I have a series of files named: CPSC317-01-Intro.pdf, CPSC317-02-Security.pdf, CPSC317-03-Transport.pdf...etc, then the threshold should be set lower than a series of files named PHIL-lecture1, PHIL-lecture2, PHIL-lecture 3...
+5) adjust the similarity `threshold` (1-100) here to specify the level of similarity required for file names to be grouped into the same folder. Notice here we are using **[fuzzy string matching](https://www.datacamp.com/tutorial/fuzzy-string-python)** to determine the closeness of two file names. For example, if I have a series of files named: *CPSC317-01-Intro.pdf, CPSC317-02-Security.pdf, CPSC317-03-Transport.pdf...etc*, then the threshold should probably be set lower than a series of files named *PHIL-lecture1, PHIL-lecture2, PHIL-lecture 3...*
 3) in the project directory command line, run 
 `main.py`
 
 <!-- USAGE EXAMPLES -->
 ## Usage
-
+<!-- TODO: insert gif of how the program works -->
 
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Basic template & styling
-
+- [x] Find a way to listen to new file downloaded
+- [x]  Ignore temporary files created during download (solution:`temp_file_names`)
+- [x]  add unit tests
+- [x]  deal with duplicate watchdog event when a file is downloaded (solution:`file_cache`)
+- [x]  keep track of a list of new folders created in a `.txt` file on disk
+- [x]  iterate through the folder to find similar names (need to come up with a way to define “similar”)
+    - https://www.alldup.de/alldup_help/search_similar_file_name.php
+    - fuzzy match in python: https://www.datacamp.com/tutorial/fuzzy-string-python
+- [x]  find a way to extract “keyword”
+- [x]  check if folder exists for the file or not
+- [x]  if a folder already exists → add that file to folder and check duplicate. if identical file exists ask if user wants to delete
+- [x]  ⭐if not exist → create new folder with keyword → move all files with similar name inside
+- [x]  test and add try-catch to deal with problems
+- [ ] ux improvements(in progress)
+- [ ] maybe create a simple UI for this
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
