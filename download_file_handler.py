@@ -14,7 +14,7 @@ newly_created_folders = "new_folders.txt"
 
  # inherits all functions in FileSystemEventHandler
 class DownloadFileHandler(FileSystemEventHandler):  
-    file_cache = []
+    file_cache = set()
     def __init__(self, file_path, threshold):
         self.file_path = file_path
         self.threshold = threshold
@@ -28,6 +28,7 @@ class DownloadFileHandler(FileSystemEventHandler):
         file_name = self.get_filename(src_path)
         similar_files = self.get_similar_files(file_name)
         print(f"length of similar files: {len(similar_files)}")
+        self.file_cache.add(src_path)
         if (len(similar_files) > 1): # if there are multiple similar files that need to be organized
             print(f"similar files: {similar_files} found in Downloads")
             keyword = self.get_keyword(similar_files)
@@ -38,12 +39,14 @@ class DownloadFileHandler(FileSystemEventHandler):
             try:
                 if (is_folder_created == ""): #folder has not been created
                     self.create_folder(keyword)
+                    print(f"new folder {dest_folder} created!")
                     self.move_files(similar_files, dest_folder)
                     #write new folder name to new_folders.txt
                     self.write_folder(keyword)
                 else: #folder is already created, move file to this folder
                     # print(f"dest_folder: {dest_folder}")
                     self.move_files([src_path], dest_folder)
+                print(f"{file_name} organized into {dest_folder}")
             except shutil.Error as e:
                 duplicate_file = self.extract_duplicate_file(e.args[0], dest_folder)
                 # print(f"duplicate file: {duplicate_file}")
@@ -55,8 +58,12 @@ class DownloadFileHandler(FileSystemEventHandler):
                         inp = input()
                     if (inp == 'y'):
                         self.remove_file(self.file_path + duplicate_file)
-                        print(f"{self.file_path + duplicate_file} deleted")
-            self.file_cache.append(src_path)
+                        if ((self.file_path + duplicate_file) in self.file_cache):
+                            self.file_cache.remove(self.file_path + duplicate_file)
+                            print(f"file cache: {self.file_cache}")
+                        print(f"{self.file_path + duplicate_file} deleted")   
+        else:
+            print("this is the first file of its kind, nothing to organize yet")   
         return
     
     def extract_duplicate_file(self, err_msg, dest_folder):
@@ -172,8 +179,4 @@ class DownloadFileHandler(FileSystemEventHandler):
             # remove non-alphanumeric characters from beginning or end
         result = re.sub(r"^\W+|\W+$", "", result)
         return result
-
-
-
-
         
