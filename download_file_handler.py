@@ -30,7 +30,7 @@ class DownloadFileHandler(FileSystemEventHandler):
         print(f"length of similar files: {len(similar_files)}")
         self.file_cache.add(src_path)
         if (len(similar_files) > 1): # if there are multiple similar files that need to be organized
-            print(f"similar files: {similar_files} found in Downloads")
+            print(f"similar files: {similar_files} found in {self.file_path}")
             keyword = self.get_keyword(similar_files)
             # print(f"keyword: {keyword}")
             dest_folder = self.file_path + keyword
@@ -52,15 +52,12 @@ class DownloadFileHandler(FileSystemEventHandler):
                 # print(f"duplicate file: {duplicate_file}")
                 if (filecmp.cmp(self.file_path + duplicate_file, dest_folder + "/" + duplicate_file)):
                     # print("line 46")
-                    inp = input(f"duplicate files {duplicate_file} found in Downloads and {dest_folder}, delete the one in Downloads? [y]/[n]\n")
+                    inp = input(f"duplicate files {duplicate_file} found in {self.file_path} and {dest_folder}, delete the one in Downloads? [y]/[n]\n")
                     while (inp not in ["y", "n"]):
                         print("please input one of [y] or [n]")
                         inp = input()
                     if (inp == 'y'):
                         self.remove_file(self.file_path + duplicate_file)
-                        if ((self.file_path + duplicate_file) in self.file_cache):
-                            self.file_cache.remove(self.file_path + duplicate_file)
-                            print(f"file cache: {self.file_cache}")
                         print(f"{self.file_path + duplicate_file} deleted")   
         else:
             print("this is the first file of its kind, nothing to organize yet")   

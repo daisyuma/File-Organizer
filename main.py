@@ -24,7 +24,6 @@ if __name__ == "__main__":
     try:
         while True:
             time.sleep(10)
-            print(f"event_handler.file_cache: {event_handler.file_cache}")
             if (time.time() - seconds > 10):
                 # clear cache every 500 seconds
                 event_handler.file_cache.clear()
