@@ -31,10 +31,8 @@ class DownloadFileHandler(FileSystemEventHandler):
         if (len(similar_files) > 1): # if there are multiple similar files that need to be organized
             print(f"similar files: {similar_files} found in {self.file_path}")
             keyword = self.get_keyword(similar_files)
-            # print(f"keyword: {keyword}")
             dest_folder = self.file_path + keyword
             is_folder_created = self.is_folder_created(file_name)
-            # print(f"is folder created : {is_folder_created}")
             try:
                 if (is_folder_created == ""): #folder has not been created
                     self.create_folder(keyword)
@@ -43,7 +41,6 @@ class DownloadFileHandler(FileSystemEventHandler):
                     #write new folder name to new_folders.txt
                     self.write_folder(keyword)
                 else: #folder is already created, move file to this folder
-                    # print(f"dest_folder: {dest_folder}")
                     self.move_files([src_path], dest_folder)
                 print(f"{file_name} organized into {dest_folder}")
             except shutil.Error as e:
@@ -109,7 +106,6 @@ class DownloadFileHandler(FileSystemEventHandler):
     # this function lazily returns the first similar folder it finds, not necessarily the MOST similar
     def is_folder_created(self, new_file):
         new_folders = self.read_folders()
-        # print(f"new_folders: {new_folders}")
         for folder in new_folders:
             similarity_score = 0
             folder_size = 0

@@ -56,9 +56,13 @@ Here is a video demo of this project!
 - [x]  ⭐if not exist → create new folder with keyword → move all files with similar name inside
 - [x]  test and add try-catch to deal with problems
 - [ ] ux improvements(in progress)
+- [ ] organize files recursively (ie. search for similar files in sub folders)
+- [ ] clean up code/comments
 - [ ] maybe create a simple UI for this
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-These are some resources I would like to give credit to.
+These are some resources I would like to give credit to:
+* [Start Automating Your Life Using Python! (File Management with Python Tutorial)](hhttps://www.youtube.com/watch?v=NCvI-K0Gp90&list=TLPQMjYwMzIwMjQAIHnlJAL1OA)
+* [Find Similar File Names](https://www.alldup.de/alldup_help/search_similar_file_name.php)
