@@ -36,7 +36,8 @@ main.py
 <!-- USAGE EXAMPLES -->
 ## Usage
 <!-- TODO: insert gif of how the program works -->
-[demo video](https://youtu.be/3MEt3rxmeFc)
+Here is a video demo of this project!
+[https://youtu.be/3MEt3rxmeFc](https://youtu.be/3MEt3rxmeFc)
 
 <!-- ROADMAP -->
 ## Roadmap
