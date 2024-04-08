@@ -27,7 +27,6 @@ class DownloadFileHandler(FileSystemEventHandler):
         print(f"new file -  {src_path} downloaded!")
         file_name = self.get_filename(src_path)
         similar_files = self.get_similar_files(file_name)
-        print(f"length of similar files: {len(similar_files)}")
         self.file_cache.add(src_path)
         if (len(similar_files) > 1): # if there are multiple similar files that need to be organized
             print(f"similar files: {similar_files} found in {self.file_path}")

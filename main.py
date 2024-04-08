@@ -24,7 +24,7 @@ if __name__ == "__main__":
     try:
         while True:
             time.sleep(10)
-            if (time.time() - seconds > 10):
+            if (time.time() - seconds > 15):
                 # clear cache every 500 seconds
                 event_handler.file_cache.clear()
                 seconds = time.time()

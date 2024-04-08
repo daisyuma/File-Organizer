@@ -23,11 +23,15 @@ To tackle this inconvenience and automate the process, I developed a python scri
 ## Running Script Locally
 1) install [Python 3](https://www.python.org/downloads/)
 2) install any missing libraries like watchdog, shutil, thefuzz ...etc
-`$ pip install watchdog shutil thefuzz`
+```
+$ pip install watchdog shutil thefuzz
+```
 4) modify the directory you want to organize
 5) adjust the similarity `threshold` (1-100) here to specify the level of similarity required for file names to be grouped into the same folder. Notice here we are using **[fuzzy string matching](https://www.datacamp.com/tutorial/fuzzy-string-python)** to determine the closeness of two file names. For example, if I have a series of files named: *CPSC317-01-Intro.pdf, CPSC317-02-Security.pdf, CPSC317-03-Transport.pdf...etc*, then the threshold should probably be set lower than a series of files named *PHIL-lecture1, PHIL-lecture2, PHIL-lecture 3...*
 3) in the project directory command line, run 
-`main.py`
+```
+main.py
+```
 
 <!-- USAGE EXAMPLES -->
 ## Usage
